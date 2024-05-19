@@ -2,8 +2,6 @@
 #include <vector>
 #include <string>
 #include <algorithm>
-#include <ctime>
-#include <fstream>
 using namespace std;
 
 #define SIZE 100
@@ -34,6 +32,7 @@ public:
     int searchKey(int key);
 
     void pinjamBuku();
+    void returnBook(Perpus& p, string buku, int key);
 
     string toUpper(string& judulBuku);
 };
@@ -59,6 +58,7 @@ int main() {
                 cout << "3. Cari Buku (By key)\n";
                 cout << "4. Tampilkan Semua Buku\n";
                 cout << "5. Pinjam Buku\n";
+                cout << "6. Kembalikan Buku\n";
                 cout << "0. Keluar\n";
                 cout << "> ";
 
@@ -79,11 +79,12 @@ int main() {
                     break;
                 case 4:
                     p.sortBook();
-
                     break;
                 case 5: 
                     p.pinjamBuku();
                     break;
+                case 6:
+                    p.returnBook(p, buku, key);
                 case 0: 
                     break;
                 default:
@@ -172,22 +173,22 @@ void Perpus::mergeSort(int L, int R) {
 }
 
 void Perpus::displayBooks() {
-    bool allEmpty = true; 
+
     cout << endl;
     for(int i = 0; i < SIZE; ++i) {
         if (!CopyTable[i].empty()) {
             cout << "- " << CopyTable[i] << endl;
-            allEmpty = false;
+
         }
-    }
-    if(allEmpty){
-        cout << "Tidak Ada Buku Sama Sekali\n";
+        else if(i == SIZE - 1 && CopyTable[i].empty()){
+            cout << "Tidak Ada Buku Sama Sekali";
+        }
     }
     cout << endl;
 }
 
 void Perpus::addBook(Perpus &p, string buku, int key){
-    cout << "\nMasukkan Nama Buku Yang Akan Dimasukkan/Disimpan\n\n";
+    cout << "\nMasukkan Nama Buku Yang Akan Dimasukkan/Disimpan[Masukkan -1 Pada Key Untuk Stop]\n\n";
     do {
         cout << "Masukkan Nama Buku: ";
         getline(cin, buku);
@@ -203,7 +204,7 @@ void Perpus::addBook(Perpus &p, string buku, int key){
 }
 
 void Perpus::sortBook(){
-    copyTable();
+    
     cout << "\nDaftar Buku" << endl;
     mergeSort(0, SIZE - 1);
     displayBooks();
@@ -262,7 +263,8 @@ void Perpus::searchByName(){
 }
 void Perpus::searchByKey() {
     int keyNum;
-    int option, option2;
+    int option;
+    int option2 = 1;
 
     do {
         cout << "\nMasukkan Key Dari Buku Yang Ingin Dicari: ";
@@ -296,13 +298,14 @@ void Perpus::searchByKey() {
         switch (option)
         {
         case 2:
+            cin.ignore();
             pinjamBuku();
             cout << "\nLanjut Mencari Buku?\n";
             cout << "1. Ulang\n";
             cout << "0. Keluar\n";
             cout << "> ";
             cin >> option2;
-            cin.ignore();
+            option = 2;
             break;
         
         default:
@@ -414,60 +417,18 @@ string Perpus::toUpper(string& judulBuku){
     return result;
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-   /* cout << "Masukkan Nama Buku Yang Akan Dimasukkan/Disimpan\n";
+void Perpus::returnBook(Perpus& p, string buku, int key){
+    cout << "\nMasukkan Nama Buku Yang Akan Dikembalikan/Disimpan[Masukkan -1 Pada Key Untuk Stop]\n\n";
     do {
         cout << "Masukkan Nama Buku: ";
         getline(cin, buku);
         cout << "Masukkan Key: ";
         cin >> key;
+        cout << endl;
         cin.ignore(); // Clear buffer after cin
-        if (key != -1) {
+        if (key != -1){
+            buku = toUpper(buku);
             p.hash(buku, key);
         }
     } while (key != -1);
-
-    cout << "\nDaftar Buku Sebelum Diurutkan:" << endl;
-    p.displayBooks();
-
-    cout << "\nDaftar Buku Setelah Diurutkan:" << endl;
-    p.mergeSort(0, SIZE - 1);
-    p.displayBooks();
-
-
-
-
-    void Perpus::searchBooks(string cariBuku){
-    int temp = -1;
-    int i = 0;
-    for(int i = 0; i < SIZE; i++){
-        if(table[i] == cariBuku){
-            cout << "Nama Buku: " << table[i] << "Rak: " << i << endl;
-            temp = i;
-            break;
-        }
-    }
 }
-    */
